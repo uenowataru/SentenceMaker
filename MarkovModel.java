@@ -12,7 +12,7 @@ public class MarkovModel {
 		model = new HashMap<String, Map<String, Integer> >();
 		this.mode = mode;
 		if(mode == 2){
-			makeMarkovModel(text);
+			makeMarkovModelBi(text);
 		}else{
 			makeMarkovModelTri(text);
 		}
@@ -25,6 +25,7 @@ public class MarkovModel {
 			return makeSentenceTri();
 		}
 	}
+	/* makesentence of bigram version of the markov model */
 	private String makeSentenceBi(){
 		String text = chooseWord(".");
 		String current = text.toString();
@@ -34,6 +35,7 @@ public class MarkovModel {
 		}
 		return text.replace(" .", ".");
 	}
+	/* makesentence of trigram version of the markov model */
 	private String makeSentenceTri(){
 		String prev = ".";
 		String current = chooseWord(". .");
@@ -62,15 +64,17 @@ public class MarkovModel {
 		double[] strProb = new double[strs.length];
 		double chance = r.nextDouble();
 		for(int i = 0; i < strs.length; i++){
-			curTotal += (Integer) strmap.get(strs[i])/total;
+			strProb[i] = (Integer) strmap.get(strs[i])/total;
+			curTotal += strProb[i];
 			if(curTotal >= chance){
+				System.out.println(strs[i] + ":" + strProb[i]);
 				return (String) strs[i];
 			}
 		}
 		return null;
 	}
-	/* makes markov model */
-	private void makeMarkovModel(String text){
+	/* makes markov model based off of bigram version of word sequence*/
+	private void makeMarkovModelBi(String text){
 		text = ". ".concat(text);
 		text = text.concat(" ");
 		text = text.replace(". ", " . ");
@@ -91,6 +95,7 @@ public class MarkovModel {
 			current = next;
 		}
 	}
+	/* makes markov model based off of trigram version of word sequence*/
 	private void makeMarkovModelTri(String text){
 		text = ". ".concat(text);
 		text = text.concat(" ");
@@ -102,8 +107,8 @@ public class MarkovModel {
 			String next = strScan.next();
 			Map strmap = (Map) model.get(prev + " " + current);
 			if(strmap == null){
-				model.put(prev + " " + current, new HashMap<String, Integer>());
-				strmap = (Map) model.get(prev + " " + current);
+				strmap = new HashMap<String, Integer>();
+				model.put(prev + " " + current, strmap);
 			}
 			Integer freq = ((Integer) strmap.get(next));
 			if(freq == null){
