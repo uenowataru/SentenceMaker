@@ -7,13 +7,14 @@ import java.util.Scanner;
 public class MarkovModel {
 	private Map model;
 	private int mode;
+	/* constructor for making a markov model */
 	public MarkovModel(String text, int mode){
 		model = new HashMap<String, Map<String, Integer> >();
 		this.mode = mode;
-		if(mode == 3){
-			makeMarkovModelTri(text);
-		}else{
+		if(mode == 2){
 			makeMarkovModel(text);
+		}else{
+			makeMarkovModelTri(text);
 		}
 	}
 	/* makes sentence using the Markov Model we built */
